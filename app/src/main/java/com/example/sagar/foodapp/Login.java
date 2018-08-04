@@ -42,7 +42,7 @@ public class Login extends AppCompatActivity {
 
 
         FirebaseDatabase database= FirebaseDatabase.getInstance();
-        final DatabaseReference table_user = database.getReference("user");
+        final DatabaseReference table_user = database.getReference("User");
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -81,10 +81,10 @@ public class Login extends AppCompatActivity {
 
     //validate mobile number and password
     private boolean validate(String s, String s1) {
-        if(s.length()==10 && s1.length()>5)
+       // if(s.length()==10 && s1.length()>5)
         return true;
-        waitingDialog.dismiss();
+     /*   waitingDialog.dismiss();
         Toast.makeText(this, "Enter valid credentials", Toast.LENGTH_SHORT).show();
-        return false;
+        return false;*/
     }
 }

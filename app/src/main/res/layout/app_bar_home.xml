@@ -23,20 +23,14 @@
 
     <include layout="@layout/content_home" />
 
-    <TextView
-        android:layout_gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="fdjsgjkhfadgfkdjsgjkdfs" />
 
-
-    <!--android.support.design.widget.FloatingActionButton
+    <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:backgroundTint="@android:color/white"
-        app:srcCompat="@drawable/ic_shopping_cart_black_24dp" /-->
+        app:backgroundTint="@android:color/white"
+        app:srcCompat="@drawable/ic_shopping_cart_black_24dp" />
 
 </android.support.design.widget.CoordinatorLayout>

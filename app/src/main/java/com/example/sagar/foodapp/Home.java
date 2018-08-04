@@ -2,6 +2,7 @@ package com.example.sagar.foodapp;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -20,16 +21,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sagar.foodapp.Common.Common;
-import com.example.sagar.foodapp.Interface.ItemClickListner;
 import com.example.sagar.foodapp.Model.Category;
 import com.example.sagar.foodapp.Model.User;
-import com.example.sagar.foodapp.ViewHolder.MenuViewHolder;
+import com.example.sagar.foodapp.adapters.MenuAdapter;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -38,7 +44,8 @@ public class Home extends AppCompatActivity
     DatabaseReference category;
     TextView UserName;
     RecyclerView recycler_menu;
-    FirebaseRecyclerAdapter<Category,MenuViewHolder> adapter;
+    MenuAdapter adapter;
+  //  FirebaseRecyclerAdapter<Category,MenuViewHolder> adapter;
     RecyclerView.LayoutManager layoutManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,15 +67,14 @@ public class Home extends AppCompatActivity
 
 
 
-      /*  FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                //
             }
         });
-*/
+
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -90,37 +96,32 @@ public class Home extends AppCompatActivity
         recycler_menu.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recycler_menu.setLayoutManager(layoutManager);
-
-
-        //--------------------
-        DatabaseReference categoryRef = FirebaseDatabase.getInstance().getReference().child("Category");
-        Log.d("TAG", "onCreate: "+categoryRef);
-        Query categoryQuery = categoryRef.orderByKey();
-        Log.d("TAG", "onCreate: "+categoryRef.getDatabase().toString());
-
-        FirebaseRecyclerOptions<Category> options = new FirebaseRecyclerOptions.Builder<Category>().setQuery(categoryQuery, Category.class).build();
-        //--------------------------
-        adapter = new FirebaseRecyclerAdapter<Category, MenuViewHolder>(options) {
-
+        final List<Category> myList = new ArrayList<>();
+         database= FirebaseDatabase.getInstance();
+        final DatabaseReference table_user = database.getReference("Category");
+        table_user.addValueEventListener(new ValueEventListener() {
             @Override
-            public MenuViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.menu_item, parent, false);
-
-                return new MenuViewHolder(view);
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                    Category cat = postSnapshot.getValue(Category.class);
+                    cat.setId(postSnapshot.getKey());
+                    myList.add(cat);
+                }
+                adapter = new MenuAdapter(myList);
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+                recycler_menu.setLayoutManager(mLayoutManager);
+                recycler_menu.setAdapter(adapter);
             }
 
             @Override
-            protected void onBindViewHolder(MenuViewHolder holder, final int position, final Category model) {
-                holder.txtMenuName.setText(model.getName());
-                Picasso.get().load(model.getImage()).into(holder.imgMenuImage);
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        };
+        });
 
 
-        Log.d("TAG", "onCreate: "+adapter.getItemCount());
-        recycler_menu.setAdapter(adapter);
+
+
 
     }
 

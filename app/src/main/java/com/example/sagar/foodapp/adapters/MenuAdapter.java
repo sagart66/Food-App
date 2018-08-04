@@ -13,45 +13,45 @@ import android.widget.Toast;
 
 import com.example.sagar.foodapp.FoodList;
 import com.example.sagar.foodapp.Model.Category;
-import com.example.sagar.foodapp.Model.Food;
 import com.example.sagar.foodapp.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.MyViewHolder> {
+public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> {
 
-    private List<Food> List;
+    private List<Category> List;
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        public TextView txtFoodName;
-        public ImageView imgFoodImage;
+        public TextView txtMenuName;
+        public ImageView imgMenuImage;
+        public String key;
 
         public MyViewHolder(View view) {
             super(view);
             view.setOnClickListener(this);
-            txtFoodName = (TextView)itemView.findViewById(R.id.txtFoodItem);
-            imgFoodImage = (ImageView)itemView.findViewById(R.id.imgFoodItem);
+            txtMenuName = (TextView)itemView.findViewById(R.id.txtMenuItem);
+            imgMenuImage = (ImageView)itemView.findViewById(R.id.imgMenuItem);
         }
 
         @Override
         public  void onClick(View view) {
-
-
-            Toast.makeText(view.getContext(),""+getAdapterPosition(),Toast.LENGTH_SHORT).show();
+                Intent intent  = new Intent(view.getContext(), FoodList.class);
+                intent.putExtra("CategoryId",key);
+                view.getContext().startActivity(intent);
         }
     }
 
 
-    public FoodAdapter(java.util.List<Food> List) {
+    public MenuAdapter(List<Category> List) {
         this.List = List;
     }
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.food_item, parent, false);
+                .inflate(R.layout.menu_item, parent, false);
 
 
 
@@ -60,9 +60,10 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.MyViewHolder> 
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        Food food = List.get(position);
-        holder.txtFoodName.setText(food.getName());
-        Picasso.get().load(food.getImage()).into(holder.imgFoodImage);
+       Category category = List.get(position);
+       holder.txtMenuName.setText(category.getName());
+       holder.key=category.getId();
+        Picasso.get().load(category.getImage()).into(holder.imgMenuImage);
 
     }
 

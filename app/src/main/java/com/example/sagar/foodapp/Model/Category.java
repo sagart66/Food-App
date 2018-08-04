@@ -3,6 +3,15 @@ package com.example.sagar.foodapp.Model;
 public class Category {
     private String Name;
     private String Image;
+    private String Id;
+
+    public String getId() {
+        return Id;
+    }
+
+    public void setId(String id) {
+        Id = id;
+    }
 
     public Category(String name, String image) {
         Name = name;
